@@ -1,0 +1,24 @@
+# DR policy: replicate webapp-demo-napp (primary SVM) to webapp-demo-napp-dr (DR SVM) with
+# ONTAP SnapMirror every 5 minutes (= RPO). Trident Protect creates the SnapMirror
+# relationships per PVC itself and keeps the app's resources in sync via the AppVaults.
+#
+# ${SOURCE_APP_UID}: the source Application's UID (changes whenever it is recreated):
+#   oc get applications.protect.trident.netapp.io webapp-demo-napp -n webapp-demo-napp -o jsonpath='{.metadata.uid}'
+apiVersion: protect.trident.netapp.io/v1
+kind: AppMirrorRelationship
+metadata:
+  name: webapp-demo-napp-mirror
+  namespace: webapp-demo-napp-dr
+spec:
+  desiredState: Established          # set to Promoted to fail over
+  sourceApplicationName: webapp-demo-napp
+  sourceApplicationUID: ${SOURCE_APP_UID}
+  sourceAppVaultRef: odf-noobaa      # bucket the source app's snapshots/metadata go to
+  destinationAppVaultRef: odf-noobaa-dr
+  namespaceMapping:
+    - source: webapp-demo-napp
+      destination: webapp-demo-napp-dr
+  storageClassName: ontap-nas-dr-sc  # destination volumes on the DR SVM
+  recurrenceRule: |-
+    DTSTART:20260101T000000Z
+    RRULE:FREQ=MINUTELY;INTERVAL=5

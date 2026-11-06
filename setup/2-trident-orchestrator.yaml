@@ -1,0 +1,9 @@
+# Installs Trident itself (CSI controller and node pods) in the trident namespace.
+# Wait until: oc get tridentorchestrator trident -o jsonpath='{.status.status}'  ->  Installed
+apiVersion: trident.netapp.io/v1
+kind: TridentOrchestrator
+metadata:
+  name: trident
+spec:
+  namespace: trident
+  debug: false

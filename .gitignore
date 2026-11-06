@@ -1,0 +1,5 @@
+# Local state / helpers
+.last-backup
+resume.sh
+.DS_Store
+ontap-nas-sc.backup.yaml

@@ -1,0 +1,15 @@
+# Backup to the S3 bucket: Trident Protect takes a snapshot and copies the volume data
+# to the AppVault with the Kopia data mover.
+# When it's Completed, note where it was stored (needed to restore after losing the namespace):
+#   oc get backups.protect.trident.netapp.io webapp-backup-1 -n webapp-demo-napp -o jsonpath='{.status.appArchivePath}'
+apiVersion: protect.trident.netapp.io/v1
+kind: Backup
+metadata:
+  name: webapp-backup-1
+  namespace: webapp-demo-napp
+spec:
+  applicationRef: webapp-demo-napp
+  appVaultRef: odf-noobaa
+  dataMover: Kopia
+  # Retain: keep the data in the bucket even if this Backup object (or the namespace) is deleted
+  reclaimPolicy: Retain

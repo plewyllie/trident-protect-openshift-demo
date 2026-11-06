@@ -1,0 +1,20 @@
+# Trident backend for the DR SVM (NFS), same ONTAP cluster and credentials as the primary. Fill in:
+#   ${MANAGEMENT_LIF}       ONTAP cluster management LIF
+#   ${DR_SVM}               the DR SVM (peered with the primary SVM)
+#   ${DR_DATA_LIF}          NFS data LIF of the DR SVM
+apiVersion: trident.netapp.io/v1
+kind: TridentBackendConfig
+metadata:
+  name: backend-ontap-nas-dr
+  namespace: trident
+spec:
+  version: 1
+  storageDriverName: ontap-nas
+  managementLIF: ${MANAGEMENT_LIF}
+  dataLIF: ${DR_DATA_LIF}
+  svm: ${DR_SVM}
+  backendName: ontap-nas-dr
+  credentials:
+    name: ontap-credentials
+  labels:
+    site: dr

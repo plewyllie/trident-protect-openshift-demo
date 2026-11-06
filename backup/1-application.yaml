@@ -1,0 +1,9 @@
+# Tell Trident Protect what to protect - everything in the webapp-demo-napp namespace
+apiVersion: protect.trident.netapp.io/v1
+kind: Application
+metadata:
+  name: webapp-demo-napp
+  namespace: webapp-demo-napp
+spec:
+  includedNamespaces:
+    - namespace: webapp-demo-napp

@@ -1,0 +1,13 @@
+# NetApp Trident operator from OperatorHub (certified catalog), for all namespaces.
+# Skip this and 2-trident-orchestrator.yaml if Trident is already installed.
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: trident-operator
+  namespace: openshift-operators
+spec:
+  channel: stable
+  name: trident-operator
+  source: certified-operators
+  sourceNamespace: openshift-marketplace
+  installPlanApproval: Automatic

@@ -1,0 +1,20 @@
+# Restore after losing the whole namespace. The restore object lives in the destination
+# namespace, so the namespace is created first. No UID-range tricks are needed because
+# the app runs with fixed UIDs (see app/webapp.yaml).
+# ${ARCHIVE_PATH}: the backup's .status.appArchivePath (see 3-backup.yaml)
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: webapp-demo-napp
+---
+apiVersion: protect.trident.netapp.io/v1
+kind: BackupRestore
+metadata:
+  name: webapp-restore-full
+  namespace: webapp-demo-napp
+spec:
+  appVaultRef: odf-noobaa
+  appArchivePath: ${ARCHIVE_PATH}
+  namespaceMapping:
+    - source: webapp-demo-napp
+      destination: webapp-demo-napp

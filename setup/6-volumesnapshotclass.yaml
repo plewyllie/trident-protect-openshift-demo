@@ -1,0 +1,7 @@
+# Snapshot class for NetApp Trident volumes (needed for Trident Protect snapshots)
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshotClass
+metadata:
+  name: trident-snapshotclass
+driver: csi.trident.netapp.io
+deletionPolicy: Delete

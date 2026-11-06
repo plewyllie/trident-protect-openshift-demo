@@ -1,0 +1,11 @@
+# Helm values for NetApp Trident Protect:
+#   helm repo add netapp-trident-protect https://netapp.github.io/trident-protect-helm-chart
+#   helm upgrade --install trident-protect netapp-trident-protect/trident-protect \
+#     --version 100.2606.0 -n trident-protect --create-namespace -f setup/trident-protect-values.yaml
+clusterName: my-cluster       # any name that identifies this cluster
+useOpenshiftServiceCA: true   # webhook/metrics certificates from the OpenShift service CA
+scc:
+  # Must be higher than any other SCC the Trident Protect job accounts may use, or their
+  # backup pods get the wrong SCC (e.g. OpenShift AI and Pipelines add SCCs at priority 10-11).
+  # Check: oc get scc -o custom-columns=NAME:.metadata.name,PRIORITY:.priority
+  priority: 20

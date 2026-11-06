@@ -1,0 +1,10 @@
+# Storage class for the DR SVM, used for the replicated volumes
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ontap-nas-dr-sc
+provisioner: csi.trident.netapp.io
+parameters:
+  backendType: ontap-nas
+  selector: "site=dr"
+allowVolumeExpansion: true

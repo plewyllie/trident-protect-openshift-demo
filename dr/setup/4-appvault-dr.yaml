@@ -1,0 +1,26 @@
+# Trident Protect AppVault for the DR bucket. Fill in the two placeholders:
+#   ${BUCKET_NAME}: oc get cm trident-protect-backups-dr -n trident-protect -o jsonpath='{.data.BUCKET_NAME}'
+#   ${SERVICE_CA}:  oc get cm openshift-service-ca.crt -n trident-protect -o jsonpath='{.data.service-ca\.crt}'
+apiVersion: protect.trident.netapp.io/v1
+kind: AppVault
+metadata:
+  name: odf-noobaa-dr
+  namespace: trident-protect
+spec:
+  providerType: GenericS3
+  providerConfig:
+    s3:
+      bucketName: ${BUCKET_NAME}
+      endpoint: s3.openshift-storage.svc:443
+      secure: "true"
+      rootCA: |
+        ${SERVICE_CA}
+  providerCredentials:
+    accessKeyID:
+      valueFromSecret:
+        name: trident-protect-backups-dr
+        key: AWS_ACCESS_KEY_ID
+    secretAccessKey:
+      valueFromSecret:
+        name: trident-protect-backups-dr
+        key: AWS_SECRET_ACCESS_KEY

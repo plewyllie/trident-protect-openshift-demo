@@ -1,0 +1,29 @@
+# Trident Protect AppVault: the ODF bucket from 7-backup-bucket.yaml.
+# Fill in the two placeholders:
+#   ${BUCKET_NAME}: oc get cm trident-protect-backups -n trident-protect -o jsonpath='{.data.BUCKET_NAME}'
+#   ${SERVICE_CA}:  oc get cm openshift-service-ca.crt -n trident-protect -o jsonpath='{.data.service-ca\.crt}'
+#                   (NooBaa's in-cluster S3 endpoint is signed by the OpenShift service CA;
+#                    paste the PEM block indented under rootCA)
+apiVersion: protect.trident.netapp.io/v1
+kind: AppVault
+metadata:
+  name: odf-noobaa
+  namespace: trident-protect
+spec:
+  providerType: GenericS3
+  providerConfig:
+    s3:
+      bucketName: ${BUCKET_NAME}
+      endpoint: s3.openshift-storage.svc:443
+      secure: "true"
+      rootCA: |
+        ${SERVICE_CA}
+  providerCredentials:
+    accessKeyID:
+      valueFromSecret:
+        name: trident-protect-backups
+        key: AWS_ACCESS_KEY_ID
+    secretAccessKey:
+      valueFromSecret:
+        name: trident-protect-backups
+        key: AWS_SECRET_ACCESS_KEY

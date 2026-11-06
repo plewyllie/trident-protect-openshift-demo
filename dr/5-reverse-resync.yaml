@@ -1,0 +1,36 @@
+# Failback: reverse resync with Trident's own TridentMirrorRelationship (Trident Protect
+# 26.x has no reverse option on AppMirrorRelationship). Created in the ORIGINAL namespace,
+# each original PVC becomes a mirror destination of its DR volume. ONTAP
+# rolls the original volume back to the last common snapshot and sends only the changes made
+# at the DR site; the original volumes are reused.
+#
+# Before applying: stop the DR app (oc scale deploy --all -n webapp-demo-napp-dr --replicas=0).
+# Requires the common snapshot to still exist on the primary SVM, so the source snapshot schedule
+# must have been disabled at failover.
+#
+# The DR volume handles (<dr-svm>:<volume>), from the forward mirrors in the DR namespace:
+#   oc get tridentmirrorrelationships.trident.netapp.io -n webapp-demo-napp-dr \
+#     -o 'custom-columns=PVC:.spec.volumeMappings[0].localPVCName,DR_VOLUME:.status.conditions[0].localVolumeHandle'
+apiVersion: trident.netapp.io/v1
+kind: TridentMirrorRelationship
+metadata:
+  name: postgres-data
+  namespace: webapp-demo-napp
+spec:
+  state: reestablished        # then: promoted (makes the original volume writable again)
+  replicationPolicy: MirrorAllSnapshots
+  volumeMappings:
+    - localPVCName: postgres-data
+      remoteVolumeHandle: "${DR_VOLUME_POSTGRES_DATA}"
+---
+apiVersion: trident.netapp.io/v1
+kind: TridentMirrorRelationship
+metadata:
+  name: uploads
+  namespace: webapp-demo-napp
+spec:
+  state: reestablished
+  replicationPolicy: MirrorAllSnapshots
+  volumeMappings:
+    - localPVCName: uploads
+      remoteVolumeHandle: "${DR_VOLUME_UPLOADS}"

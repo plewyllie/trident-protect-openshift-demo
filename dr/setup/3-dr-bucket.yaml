@@ -1,0 +1,9 @@
+# Second S3 bucket on ODF for the DR side's metadata
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: trident-protect-backups-dr
+  namespace: trident-protect
+spec:
+  generateBucketName: trident-protect-backups-dr
+  storageClassName: openshift-storage.noobaa.io

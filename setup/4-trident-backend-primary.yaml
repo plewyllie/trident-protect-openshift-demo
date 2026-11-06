@@ -1,0 +1,21 @@
+# Trident backend for the primary SVM (NFS). Fill in:
+#   ${MANAGEMENT_LIF}     ONTAP cluster management LIF
+#   ${PRIMARY_SVM}        SVM that holds the app's volumes
+#   ${PRIMARY_DATA_LIF}   NFS data LIF of that SVM
+# The site=primary label lets storage classes select this backend (see 5-storageclass-primary.yaml).
+apiVersion: trident.netapp.io/v1
+kind: TridentBackendConfig
+metadata:
+  name: backend-ontap-nas-primary
+  namespace: trident
+spec:
+  version: 1
+  storageDriverName: ontap-nas
+  managementLIF: ${MANAGEMENT_LIF}
+  dataLIF: ${PRIMARY_DATA_LIF}
+  svm: ${PRIMARY_SVM}
+  backendName: ontap-nas-primary
+  credentials:
+    name: ontap-credentials
+  labels:
+    site: primary

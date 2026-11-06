@@ -1,0 +1,19 @@
+# Snapshot schedule on the SOURCE app. The AppMirrorRelationship replicates the most
+# recent snapshot of the source app, so the source needs snapshots at the same interval
+# as the mirror's recurrenceRule (5 minutes = RPO).
+apiVersion: protect.trident.netapp.io/v1
+kind: Schedule
+metadata:
+  name: webapp-replication-schedule
+  namespace: webapp-demo-napp
+spec:
+  applicationRef: webapp-demo-napp
+  appVaultRef: odf-noobaa
+  enabled: true
+  runImmediately: true
+  granularity: Custom
+  recurrenceRule: |-
+    DTSTART:20260101T000000Z
+    RRULE:FREQ=MINUTELY;INTERVAL=5
+  snapshotRetention: "3"
+  backupRetention: "0"

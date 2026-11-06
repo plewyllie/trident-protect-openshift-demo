@@ -1,0 +1,23 @@
+# DR namespace. The app runs with fixed UIDs, so no UID-range annotations are needed.
+# The nonroot-v2 RoleBinding is created up front because the replicated RoleBinding
+# from the source names the service account in the *source* namespace.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: webapp-demo-napp-dr
+  labels:
+    app.kubernetes.io/part-of: webapp-demo
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: webapp-scc-nonroot-v2-dr
+  namespace: webapp-demo-napp-dr
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:openshift:scc:nonroot-v2
+subjects:
+  - kind: ServiceAccount
+    name: webapp
+    namespace: webapp-demo-napp-dr

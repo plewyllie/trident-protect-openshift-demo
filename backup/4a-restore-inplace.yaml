@@ -1,0 +1,10 @@
+# Restore after data loss, namespace still exists: overwrite the app with the backup.
+# ${ARCHIVE_PATH}: the backup's .status.appArchivePath (see 3-backup.yaml)
+apiVersion: protect.trident.netapp.io/v1
+kind: BackupInplaceRestore
+metadata:
+  name: webapp-restore-inplace
+  namespace: webapp-demo-napp
+spec:
+  appVaultRef: odf-noobaa
+  appArchivePath: ${ARCHIVE_PATH}

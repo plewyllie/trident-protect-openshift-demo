@@ -1,0 +1,10 @@
+# S3 bucket on ODF (NooBaa) for Trident Protect backups and app metadata.
+# Creates a Secret and ConfigMap "trident-protect-backups" with the credentials and bucket name.
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: trident-protect-backups
+  namespace: trident-protect
+spec:
+  generateBucketName: trident-protect-backups
+  storageClassName: openshift-storage.noobaa.io

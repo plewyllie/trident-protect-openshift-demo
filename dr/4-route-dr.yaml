@@ -1,0 +1,21 @@
+# Route for the DR app, used after failover. The replicated Route still carries the
+# source app's hostname, which the source Route holds (HostAlreadyClaimed). Removing
+# spec.host doesn't make OpenShift generate a new one, so replace the Route:
+#   oc delete route frontend -n webapp-demo-napp-dr
+#   oc apply -f dr/4-route-dr.yaml
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: frontend
+  namespace: webapp-demo-napp-dr
+  labels:
+    app.kubernetes.io/part-of: webapp-demo
+spec:
+  to:
+    kind: Service
+    name: frontend
+  port:
+    targetPort: 8080
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

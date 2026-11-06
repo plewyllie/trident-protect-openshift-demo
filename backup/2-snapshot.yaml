@@ -1,0 +1,11 @@
+# Optional: point-in-time snapshot - ONTAP snapshots of the volumes on ONTAP,
+# plus the app's Kubernetes resources in the AppVault. Fast, but stays on the same storage.
+apiVersion: protect.trident.netapp.io/v1
+kind: Snapshot
+metadata:
+  name: webapp-snap-1
+  namespace: webapp-demo-napp
+spec:
+  applicationRef: webapp-demo-napp
+  appVaultRef: odf-noobaa
+  reclaimPolicy: Delete
